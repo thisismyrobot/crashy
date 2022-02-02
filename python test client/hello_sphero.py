@@ -6,7 +6,7 @@ import serial
 
 class Sphero2CommandBuilder():
     def __init__(self, sequence_ids=True):
-        self._sequence_id = 54
+        self._sequence_id = 0
         self._sequence_ids = sequence_ids
 
     @property
