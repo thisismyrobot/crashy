@@ -49,19 +49,28 @@ class Sphero2CommandBuilder():
         return self._build(0x02, 0x30, speed, heading_msb, heading_lsb, 1)
 
     def stop(self):
-        return self._build(0x02, 0x30, 0, 0, 0, 0)
+        return self._build(0x02, 0x30, 0x00, 0x00, 0x00, 0x00)
+
+    def sleep(self, deep=False):
+        if deep:
+            return self._build(0x00, 0x22, 0xFF, 0xFF, 0x00, 0x00, 0x00)
+        else:
+            return self._build(0x00, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00)
 
 
 def main(port='COM1'):
-    builder = Sphero2CommandBuilder()
+    commands = Sphero2CommandBuilder()
 
     with serial.Serial(port, 115200, timeout=5, writeTimeout=5) as ser:
-        ser.write(builder.ping())
+        ser.write(commands.ping())
         print(f'Ping response: {ser.read(256)}')
 
-        ser.write(builder.roll(30))
+        ser.write(commands.roll(30))
         time.sleep(1)
-        ser.write(builder.stop())
+        ser.write(commands.stop())
+
+        time.sleep(1)
+        ser.write(commands.sleep(True))
 
 
 if __name__ == '__main__':
