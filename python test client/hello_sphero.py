@@ -15,7 +15,7 @@ class Sphero2CommandBuilder():
             self._sequence_id += 1
         return self._sequence_id
 
-    def _build(self, device_id, command_id, *data, expect_answer=False):
+    def _build(self, device_id, command_id, *data, expect_answer=False, parser=None):
         cmd = [
             0xff,  # SOP
             0xff if expect_answer else 0xfe,  # Reset timeout, maybe expect an answer.
@@ -28,10 +28,12 @@ class Sphero2CommandBuilder():
         # Checksum
         cmd += [~(sum(cmd[2:]) % 256) & 0xFF]
 
-        return bytes(cmd)
+        class Command():
+            def __init__(self):
+                self.bytes = bytes(cmd)
+                self.parse = parser if parser is not None else lambda x: None
 
-    def _pack_data(self, *data):
-        pass
+        return Command()
 
     def ping(self):
         return self._build(0x00, 0x01, expect_answer=True)
@@ -52,25 +54,39 @@ class Sphero2CommandBuilder():
         return self._build(0x02, 0x30, 0x00, 0x00, 0x00, 0x00)
 
     def sleep(self, deep=False):
+        """Warning: deep sleep requires charger to wake."""
         if deep:
             return self._build(0x00, 0x22, 0xFF, 0xFF, 0x00, 0x00, 0x00)
         else:
             return self._build(0x00, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00)
+
+    def battery_voltage(self):
+        def parser(response):
+            voltage_msb = response[7]
+            voltage_lsb = response[8]
+            return ((voltage_msb * 255) + voltage_lsb) / 100.0
+
+        return self._build(0x00, 0x20, expect_answer=True, parser=parser)
 
 
 def main(port='COM1'):
     commands = Sphero2CommandBuilder()
 
     with serial.Serial(port, 115200, timeout=5, writeTimeout=5) as ser:
-        ser.write(commands.ping())
+        ser.write(commands.ping().bytes)
         print(f'Ping response: {ser.read(256)}')
 
-        ser.write(commands.roll(30))
+        voltage_command = commands.battery_voltage()
+        ser.write(voltage_command.bytes)
+        voltage = voltage_command.parse(ser.read(256))
+        print(f'Voltage: {voltage} volts')
+
+        ser.write(commands.roll(30).bytes)
         time.sleep(1)
-        ser.write(commands.stop())
+        ser.write(commands.stop().bytes)
 
         time.sleep(1)
-        ser.write(commands.sleep(True))
+        ser.write(commands.sleep().bytes)
 
 
 if __name__ == '__main__':
