@@ -17,17 +17,6 @@ void sphero_disconnect() {
 }
 
 void sphero_roll(){
-  Serial.print("Writing... ");
-  SerialBT.write(0xFF);
-  SerialBT.write(0xFE);
-  SerialBT.write(0x02);
-  SerialBT.write(0x30);
-  SerialBT.write(0x01);
-  SerialBT.write(0x05);
-  SerialBT.write(0x1e);
-  SerialBT.write(0x00);
-  SerialBT.write(0x00);
-  SerialBT.write(0x01);
-  SerialBT.write(0xa8);
-  Serial.print("Written!");  
+  uint8_t request[] = {0xFF, 0xFE, 0x02, 0x30, 0x01, 0x05, 0x1e, 0x00, 0x00, 0x01, 0xa8};
+  SerialBT.write(request, sizeof request);
 }
