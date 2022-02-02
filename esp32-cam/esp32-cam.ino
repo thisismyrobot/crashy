@@ -35,4 +35,6 @@ void explore() {
     sphero_roll();
     delay(1000);  
   }
+
+  sphero_disconnect();
 }
