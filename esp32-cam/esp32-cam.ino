@@ -4,14 +4,24 @@
  * Select Heltec_Wifi_Kit_32 as board.
 */
 #define SPHERO_NAME "Sphero-RPW"
+#define EXPLORE_TIME 10
 
 void setup() {
   Serial.begin(115200);
 
-  sphero_connect(SPHERO_NAME);
-  sphero_roll();
+  explore();
 }
 
 void loop() {
   delay(100);
+}
+
+void explore() {
+  sphero_connect(SPHERO_NAME);
+
+  int i;
+  for(i = 0; i < EXPLORE_TIME; i++) {
+    sphero_roll();
+    delay(1000);  
+  }
 }
