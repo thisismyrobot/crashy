@@ -5,6 +5,7 @@
 */
 #define SPHERO_NAME "Sphero-RPW"
 #define EXPLORE_TIME 10
+#define CONNECT_RETRIES 3
 
 void setup() {
   Serial.begin(115200);
@@ -17,9 +18,19 @@ void loop() {
 }
 
 void explore() {
-  sphero_connect(SPHERO_NAME);
-
   int i;
+  bool connected;
+  for(i = 0; i < CONNECT_RETRIES; i++) {
+    if(sphero_connect(SPHERO_NAME)) {
+      connected = true;
+      break;
+    }    
+  }
+
+  if (!connected) {
+    return;
+  }
+
   for(i = 0; i < EXPLORE_TIME; i++) {
     sphero_roll();
     delay(1000);  

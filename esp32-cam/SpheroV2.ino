@@ -2,31 +2,15 @@
 
 BluetoothSerial SerialBT;
 
-void sphero_connect(char* name)
+bool sphero_connect(char* name)
 {
-  bool result;
-
   SerialBT.enableSSP();
-
-  result = SerialBT.begin("ESP32-CAM", true);
-  Serial.print("begin: ");
-  Serial.println(result ? "True" : "False");
-
-  result = SerialBT.setPin("1234");
-  Serial.print("setPin: ");
-  Serial.println(result ? "True" : "False");
-
-  result = SerialBT.isReady(true, 5);
-  Serial.print("ready: ");
-  Serial.println(result ? "True" : "False");  
-
-  result = SerialBT.connect(name);
-  Serial.print("Connect: ");
-  Serial.println(result ? "True" : "False");
-
-  result = SerialBT.connected(30);
-  Serial.print("Connected: ");
-  Serial.println(result ? "True" : "False");
+  if (!SerialBT.begin("ESP32-CAM", true)) return false;
+  if (!SerialBT.setPin("1234")) return false;
+  if (!SerialBT.isReady(true, 5)) return false;
+  if (!SerialBT.connect(name)) return false;
+  if (!SerialBT.connected(30)) return false;
+  return true;
 }
 
 void sphero_roll(){
