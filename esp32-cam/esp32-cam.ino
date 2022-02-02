@@ -1,7 +1,6 @@
 /*
- * Add https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_dev_index.json 
- * as an additional board manager URL.
- * Install esp32 board via the board manager (2.0.2).
+ * Add https://dl.espressif.com/dl/package_esp32_index.json as an additional board manager URL.
+ * Install esp32 board via the board manager (1.0.2).
  * Select Heltec_Wifi_Kit_32 as board.
 */
 #include "BluetoothSerial.h"
@@ -11,6 +10,22 @@ uint8_t address[6] = {0x68, 0x86, 0xe7, 0x01, 0xaa, 0xd2};
 
 BluetoothSerial SerialBT;
 
+static void spp_callback(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
+{
+  Serial.print("spp_callback!!!!!:");
+  Serial.print(event);
+  Serial.println("!!!!!");
+  
+  if (event == ESP_SPP_CLOSE_EVT) 
+  {
+      Serial.println("EVENT CALLBACK CLOSE_EVT");
+  }
+  else if (event == ESP_SPP_OPEN_EVT)
+  {
+    Serial.println("EVENT CALLBACK OPEN_EVT");
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
@@ -18,6 +33,9 @@ void setup() {
   digitalWrite(LED_BUILTIN, HIGH);
 
   bool result;
+
+  SerialBT.register_callback(spp_callback);
+  SerialBT.enableSSP();
 
   result = SerialBT.begin("ESP32-CAM", true);
   Serial.print("begin: ");
