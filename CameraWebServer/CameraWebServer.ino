@@ -1,4 +1,10 @@
+/*
+ * Add https://dl.espressif.com/dl/package_esp32_index.json as an additional board manager URL.
+ * Install "esp32" via the board manager (IMPORTANT: Must be version 1.0.2).
+ * Select "AI Thinker ESP32-CAM" as the board.
+*/
 #include "esp_camera.h"
+#include "settings.h"
 #include <WiFi.h>
 
 //
@@ -7,16 +13,13 @@
 //
 
 // Select camera model
-#define CAMERA_MODEL_WROVER_KIT
+//#define CAMERA_MODEL_WROVER_KIT
 //#define CAMERA_MODEL_ESP_EYE
 //#define CAMERA_MODEL_M5STACK_PSRAM
 //#define CAMERA_MODEL_M5STACK_WIDE
-//#define CAMERA_MODEL_AI_THINKER
+#define CAMERA_MODEL_AI_THINKER
 
 #include "camera_pins.h"
-
-const char* ssid = "*********";
-const char* password = "*********";
 
 void startCameraServer();
 
