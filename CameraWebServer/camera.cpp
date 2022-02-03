@@ -65,6 +65,7 @@ photo_fb_t * takePhoto() {
 
   last_camera_fb = esp_camera_fb_get();  
   if(!last_camera_fb) {
+    Serial.println("Failed to take photo!");
     return NULL;
   }
 

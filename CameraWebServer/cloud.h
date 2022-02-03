@@ -3,6 +3,6 @@
 
 #include "photo.h"
 
-void uploadPhoto(photo_fb_t * photo);
+int savePhoto(photo_fb_t * photo);
 
 #endif

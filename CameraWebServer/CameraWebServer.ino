@@ -17,16 +17,19 @@ void setup() {
     Serial.printf("Camera init failed!");
     return;
   }
-    
-  photo_fb_t * last_photo = NULL;
-  last_photo = takePhoto();
-
-  uploadPhoto(last_photo);
-
-  Serial.println(last_photo->len);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  Serial.println("Loop");
+
+  photo_fb_t * last_photo = takePhoto();
+  if (last_photo == NULL) {
+    return;
+  }
+
+  Serial.println(last_photo->len);
+
+  savePhoto(last_photo);
+
   delay(10000);
 }
