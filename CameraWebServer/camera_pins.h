@@ -1,3 +1,5 @@
+// AI Thinker ESP32-CAM
+// DFRobot ESP32-CAM Development Board
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
