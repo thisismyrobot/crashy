@@ -1,9 +1,10 @@
-#include "esp32-hal-psram.c"
+#include <Arduino.h>
 #include "esp_camera.h"
 #include "camera_pins.h"
 #include "photo.h"
 
-camera_fb_t * last_photo_fb = NULL;
+camera_fb_t * last_camera_fb = NULL;
+photo_fb_t * last_photo_fb = NULL;
 
 bool setupCamera() {
   camera_config_t config;
@@ -57,16 +58,18 @@ bool setupCamera() {
 }
 
 photo_fb_t * takePhoto() {
-  if (last_photo_fb != NULL) {
+  if (last_camera_fb != NULL) {
     // Release the previous photo.
-    esp_camera_fb_return(last_photo_fb);
+    esp_camera_fb_return(last_camera_fb);
   }
 
-  last_photo_fb = esp_camera_fb_get();  
-  if(!last_photo_fb) {
+  last_camera_fb = esp_camera_fb_get();  
+  if(!last_camera_fb) {
     return NULL;
   }
 
+  last_photo_fb->buf = last_camera_fb->buf;
+  last_photo_fb->len = last_camera_fb->len;
 
   return last_photo_fb;
 }

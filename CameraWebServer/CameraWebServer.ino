@@ -3,39 +3,27 @@
  * Install "esp32" via the board manager (IMPORTANT: Must be version 1.0.2).
  * Select "AI Thinker ESP32-CAM" as the board.
 */
-#include <WiFi.h>
+#include <Arduino.h>
 #include "photo.h"
 #include "camera.h"
-
-#include "settings.h"
+#include "cloud.h"
 
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
 
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println(WiFi.localIP());
-
   if(!setupCamera()) {
     Serial.printf("Camera init failed!");
     return;
   }
     
-  photo_fb_t * x = NULL;
-  x = takePhoto();
+  photo_fb_t * last_photo = NULL;
+  last_photo = takePhoto();
 
-  size_t len = x->len;
-  uint8_t *fbBuf = x->buf;
+  uploadPhoto(last_photo);
 
-  Serial.println(len);
+  Serial.println(last_photo->len);
 }
 
 void loop() {
