@@ -4,6 +4,7 @@
  * Select "AI Thinker ESP32-CAM" as the board.
 */
 #include <WiFi.h>
+#include "esp_camera.h"
 
 #include "settings.h"
 
@@ -23,7 +24,14 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   setupCamera();
-  takePhoto();
+    
+  camera_fb_t * x = NULL;
+  x = takePhoto();
+  
+  size_t len = x->len;
+  uint8_t *fbBuf = x->buf;
+
+  Serial.println(len);
 }
 
 void loop() {

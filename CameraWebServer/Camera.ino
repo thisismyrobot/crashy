@@ -1,6 +1,8 @@
 #include "esp_camera.h"
 #include "camera_pins.h"
 
+camera_fb_t * last_photo_fb = NULL;
+
 void setupCamera() {
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -52,16 +54,18 @@ void setupCamera() {
   s->set_framesize(s, FRAMESIZE_QVGA);
 }
 
-void takePhoto() {
-  camera_fb_t * fb = NULL;
+camera_fb_t * takePhoto() {
+  if (last_photo_fb != NULL) {
+    // Release the previous photo.
+    esp_camera_fb_return(last_photo_fb);
+  }
 
-  fb = esp_camera_fb_get();  
-  if(!fb) {
+  last_photo_fb = esp_camera_fb_get();  
+  if(!last_photo_fb) {
     Serial.println("Camera capture failed");
-    return;
+    return NULL;
   }
 
   Serial.println("Photo taken!");
-
-  esp_camera_fb_return(fb); 
+  return last_photo_fb;
 }
