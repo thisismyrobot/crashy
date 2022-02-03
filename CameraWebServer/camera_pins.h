@@ -1,3 +1,5 @@
+#pragma once
+
 // AI Thinker ESP32-CAM
 // DFRobot ESP32-CAM Development Board
 #define PWDN_GPIO_NUM     32

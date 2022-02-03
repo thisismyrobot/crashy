@@ -1,9 +1,11 @@
+#include "esp32-hal-psram.c"
 #include "esp_camera.h"
 #include "camera_pins.h"
+#include "photo.h"
 
 camera_fb_t * last_photo_fb = NULL;
 
-void setupCamera() {
+bool setupCamera() {
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -39,8 +41,7 @@ void setupCamera() {
   // camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
-    Serial.printf("Camera init failed with error 0x%x", err);
-    return;
+    return false;
   }
 
   sensor_t * s = esp_camera_sensor_get();
@@ -52,9 +53,10 @@ void setupCamera() {
   }
   //drop down frame size for higher initial frame rate
   s->set_framesize(s, FRAMESIZE_QVGA);
+  return true;
 }
 
-camera_fb_t * takePhoto() {
+photo_fb_t * takePhoto() {
   if (last_photo_fb != NULL) {
     // Release the previous photo.
     esp_camera_fb_return(last_photo_fb);
@@ -62,10 +64,9 @@ camera_fb_t * takePhoto() {
 
   last_photo_fb = esp_camera_fb_get();  
   if(!last_photo_fb) {
-    Serial.println("Camera capture failed");
     return NULL;
   }
 
-  Serial.println("Photo taken!");
+
   return last_photo_fb;
 }
