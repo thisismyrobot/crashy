@@ -25,7 +25,7 @@ void sphero_roll(){
   SerialBT.write(request, sizeof request);
 }
 
-void explore() {
+bool explore() {
   int i;
   bool connected;
   for(i = 0; i < CONNECT_RETRIES; i++) {
@@ -36,7 +36,7 @@ void explore() {
   }
 
   if (!connected) {
-    return;
+    return false;
   }
 
   for(i = 0; i < EXPLORE_TIME; i++) {
@@ -45,4 +45,5 @@ void explore() {
   }
 
   sphero_disconnect();
+  return true;
 }

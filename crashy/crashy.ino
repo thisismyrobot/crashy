@@ -24,9 +24,12 @@ void setup() {
 
 void loop() {
 
-  // explore();
+  if(!explore()) {
+    Serial.println("Failed to explore!");    
+    delay(10000);
+    ESP.restart();
+  }
   // if (crashed()) {
-  delay(10000);
 
   photo_fb_t * last_photo = takePhoto();
   if (last_photo == NULL) {
@@ -34,9 +37,9 @@ void loop() {
     return;
   }
 
-  int error;
-  if(!savePhoto(last_photo, &error)) {
-    Serial.printf("Failed to save photo: %d\n", error);
+  int saveError = 0;
+  if(!savePhoto(last_photo, &saveError)) {
+    Serial.printf("Failed to save photo: %d\n", saveError);
     return;
   }
 

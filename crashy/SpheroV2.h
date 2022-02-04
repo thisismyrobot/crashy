@@ -1,6 +1,6 @@
 #ifndef spherov2_h
 #define spherov2_h
 
-void explore();
+bool explore();
 
 #endif
