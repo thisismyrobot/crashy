@@ -76,7 +76,6 @@ bool upload(String host, int port, String path, photo_fb_t * photo) {
   client.stop();
 
   delay(2000);
-  Serial.println("Upload complete!");
   return true;
 }
 
