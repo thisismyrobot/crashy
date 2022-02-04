@@ -16,18 +16,28 @@ void setup() {
   Serial.println();
 
   if(!setupCamera()) {
-    Serial.printf("Camera init failed!");
+    Serial.println("Camera init failed!");
     return;
   }
-
-  photo_fb_t * last_photo = takePhoto();
-  if (last_photo == NULL) {
-    return;
-  }
-
-  savePhoto(last_photo);
 }
 
 void loop() {
-  delay(100);
+
+  // explore();
+  // if (crashed()) {
+  delay(10000);
+
+  photo_fb_t * last_photo = takePhoto();
+  if (last_photo == NULL) {
+    Serial.println("Failed to take photo!");
+    return;
+  }
+
+  int error;
+  if(!savePhoto(last_photo, &error)) {
+    Serial.printf("Failed to save photo: %d\n", error);
+    return;
+  }
+
+  // }
 }

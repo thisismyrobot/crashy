@@ -4,30 +4,47 @@
 #include "photo.h"
 #include "settings.h"
 
-#define WIFI_RETRIES 5
+#define ERROR_WIFI_CONNECT 1
+#define ERROR_PARSE_URL 2
+#define ERROR_UPLOAD 3
+
+#define WIFI_RETRIES 2
 
 WiFiClient client;
 
-bool connectWifi(int retries) {
-  WiFi.begin(ssid, password);
+bool connectWiFi(int retries) {
+  int beginTries = 0;
+  while(WiFi.status() != WL_CONNECTED) {
+    WiFi.begin(ssid, password);
 
-  int tries = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    tries++;
-
-    if (tries > retries) {
-        return false;
-    }
+    int waits = 0;
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      waits++;
+  
+      // If it doesn't work in 5s, then it's bust.
+      if (waits > 10) {
+        beginTries++;
+        if (beginTries > WIFI_RETRIES) {
+          return false;
+        }
+        else {
+          break;
+        }
+      }
+    }    
   }
 
   return true;
 }
 
-void upload(String host, int port, String path, photo_fb_t * photo) {
+bool disconnectWiFi() {
+  WiFi.disconnect();  
+}
+
+bool upload(String host, int port, String path, photo_fb_t * photo) {
   if (!client.connect(host.c_str(), port)) {
-    Serial.println("Failed to connect to host and port!");
-    return;
+    return false;
   }
 
   String head = "--boundary\r\nContent-Disposition: form-data; name=\"image\"; filename=\"image.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
@@ -57,19 +74,31 @@ void upload(String host, int port, String path, photo_fb_t * photo) {
   }
   client.print(tail);
   client.stop();
+
+  delay(2000);
+  Serial.println("Upload complete!");
+  return true;
 }
 
-void savePhoto(photo_fb_t * photo) {
-  if(!connectWifi(WIFI_RETRIES)) {
-    Serial.println("Failed to connect to WiFi!");
-    return;
+bool savePhoto(photo_fb_t * photo, int * error) {
+  if(!connectWiFi(WIFI_RETRIES)) {
+    *error = ERROR_WIFI_CONNECT;
+    return false;
   }
 
   LCBUrl url;
   if (!url.setUrl(uploadEndpoint)) {
-    Serial.println("Failed to parse endpoint URL!");
-    return;
+    *error = ERROR_PARSE_URL;
+    disconnectWiFi();
+    return false;
+  }
+  
+  if(!upload(url.getHost(), url.getPort(), url.getPath(), photo)) {
+    *error = ERROR_UPLOAD;
+    disconnectWiFi();
+    return false;
   }
 
-  upload(url.getHost(), url.getPort(), url.getPath(), photo);
+  disconnectWiFi();
+  return true;
 }

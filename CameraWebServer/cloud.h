@@ -3,6 +3,6 @@
 
 #include "photo.h"
 
-int savePhoto(photo_fb_t * photo);
+bool savePhoto(photo_fb_t * photo, int * error);
 
 #endif
