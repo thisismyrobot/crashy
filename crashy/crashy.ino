@@ -9,6 +9,7 @@
 #include "photo.h"
 #include "camera.h"
 #include "cloud.h"
+#include "SpheroV2.h"
 
 void setup() {
   Serial.begin(115200);
