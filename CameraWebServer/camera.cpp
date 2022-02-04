@@ -4,7 +4,7 @@
 #include "photo.h"
 
 camera_fb_t * last_camera_fb = NULL;
-photo_fb_t * last_photo_fb = NULL;
+photo_fb_t * last_photo_fb = new photo_fb_t();
 
 bool setupCamera() {
   camera_config_t config;
@@ -28,17 +28,10 @@ bool setupCamera() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  //init with high specs to pre-allocate larger buffers
-  if(psramFound()){
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
-  }
-
+  config.frame_size = FRAMESIZE_UXGA;
+  config.jpeg_quality = 10;
+  config.fb_count = 2;
+  
   // camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -52,8 +45,6 @@ bool setupCamera() {
     s->set_brightness(s, 1);//up the blightness just a bit
     s->set_saturation(s, -2);//lower the saturation
   }
-  //drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);
   return true;
 }
 
@@ -63,7 +54,7 @@ photo_fb_t * takePhoto() {
     esp_camera_fb_return(last_camera_fb);
   }
 
-  last_camera_fb = esp_camera_fb_get();  
+  last_camera_fb = esp_camera_fb_get();
   if(!last_camera_fb) {
     Serial.println("Failed to take photo!");
     return NULL;

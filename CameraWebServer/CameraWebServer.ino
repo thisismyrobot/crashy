@@ -2,6 +2,8 @@
  * Add https://dl.espressif.com/dl/package_esp32_index.json as an additional board manager URL.
  * Install "esp32" via the board manager (IMPORTANT: Must be version 1.0.2).
  * Select "AI Thinker ESP32-CAM" as the board.
+ * Install these libs:
+ *  - LCBUrl (1.1.4)
 */
 #include <Arduino.h>
 #include "photo.h"
@@ -17,19 +19,15 @@ void setup() {
     Serial.printf("Camera init failed!");
     return;
   }
-}
-
-void loop() {
-  Serial.println("Loop");
 
   photo_fb_t * last_photo = takePhoto();
   if (last_photo == NULL) {
     return;
   }
 
-  Serial.println(last_photo->len);
-
   savePhoto(last_photo);
+}
 
-  delay(10000);
+void loop() {
+  delay(100);
 }
