@@ -6,7 +6,11 @@ async function handleRequest (event) {
   const parsedUrl = new URL(event.request.url)
 
   if (event.request.method === 'POST' && parsedUrl.pathname === '/crashy/upload') {
-    return handleUpload(event.request)
+    let authKey = await NAMESPACE.get('upload_key')
+    if (authKey === event.request.headers.get('auth')) {
+      return handleUpload(event.request)
+    }
+    return new Response("No")
   }
 
   if (event.request.method === 'GET' && parsedUrl.pathname === '/crashy/latest.jpg') {
