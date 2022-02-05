@@ -9,7 +9,7 @@ async function handleRequest(event) {
         return handleUpload(event.request)
     }
 
-    if (event.request.method === "GET" && parsedUrl.pathname === "/latest") {
+    if (event.request.method === "GET" && parsedUrl.pathname === "/latest.jpg") {
         return handleLatest(event.request)
     }
 
@@ -19,10 +19,13 @@ async function handleRequest(event) {
 async function handleUpload(request) {
     let imageData = await request.arrayBuffer()
     await NAMESPACE.put("latest", imageData)
-    return new Response(request)
+    return new Response("Success!");
 }
 
 async function handleLatest(request) {
     let imageData = await NAMESPACE.get("latest")
-    return new Response(imageData)
+    return new Response(
+        imageData.slice(162, -58),
+        { headers: new Headers([["Content-Type", "image/jpeg"]]) }
+    )
 }
