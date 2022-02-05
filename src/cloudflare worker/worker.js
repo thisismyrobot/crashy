@@ -5,11 +5,11 @@ addEventListener('fetch', event => {
 async function handleRequest (event) {
   const parsedUrl = new URL(event.request.url)
 
-  if (event.request.method === 'POST' && parsedUrl.pathname === '/upload') {
+  if (event.request.method === 'POST' && parsedUrl.pathname === '/crashy/upload') {
     return handleUpload(event.request)
   }
 
-  if (event.request.method === 'GET' && parsedUrl.pathname === '/latest.jpg') {
+  if (event.request.method === 'GET' && parsedUrl.pathname === '/crashy/latest.jpg') {
     return handleLatest(event.request)
   }
 
