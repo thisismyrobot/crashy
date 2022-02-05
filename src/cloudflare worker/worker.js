@@ -19,8 +19,9 @@ async function handleRequest (event) {
 async function handleUpload (request) {
   let imageData = await request.arrayBuffer()
   let start = await findFileStartOffset(imageData)
+  let endOffset = await findFileEndOffset(imageData)
 
-  await NAMESPACE.put('latest', imageData.slice(start, -58))
+  await NAMESPACE.put('latest', imageData.slice(start, -endOffset))
   return new Response('Success!')
 }
 
@@ -45,4 +46,19 @@ async function findFileStartOffset (imageData) {
     }
     start += 1
   }
+}
+
+async function findFileEndOffset (imageData) {
+  let decoder = new TextDecoder('utf-8')
+  let start = 0
+  while (true) {
+    let nextValue = decoder.decode(imageData.slice(start, start + 2))
+    if (nextValue === '\r\n') {
+      break
+    }
+    start += 1
+  }
+
+  // 6 covers newlines and -- etc.
+  return start + 6
 }
