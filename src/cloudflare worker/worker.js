@@ -23,9 +23,9 @@ async function handleUpload(request) {
 }
 
 async function handleLatest(request) {
-    let imageData = await NAMESPACE.get("latest")
+    let imageData = await NAMESPACE.get("latest", "arrayBuffer")
     return new Response(
-        imageData.slice(162, -58),
+        imageData.slice(153, -58),
         { headers: new Headers([["Content-Type", "image/jpeg"]]) }
     )
 }
