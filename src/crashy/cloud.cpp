@@ -88,6 +88,9 @@ bool upload(String host, int port, String path, photo_fb_t * photo) {
   }
   client.print(tail);
 
+  while (!client.available()) {
+    delay(50);  
+  }
   while (client.available()) {
     char c = client.read();
   }
