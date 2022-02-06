@@ -34,12 +34,14 @@ void loop() {
   photo_fb_t * last_photo = takePhoto();
   if (last_photo == NULL) {
     Serial.println("Failed to take photo!");
+    delay(10000);
     return;
   }
 
   int saveError = 0;
   if(!savePhoto(last_photo, &saveError)) {
     Serial.printf("Failed to save photo: %d\n", saveError);
+    delay(10000);
     return;
   }
 

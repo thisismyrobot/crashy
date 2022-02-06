@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
+#include <WiFiClientSecure.h>
 #include <LCBUrl.h>
 #include "photo.h"
 #include "settings.h"
@@ -10,7 +11,7 @@
 
 #define WIFI_RETRIES 2
 
-WiFiClient client;
+WiFiClientSecure client;
 
 bool connectWiFi(int retries) {
   int beginTries = 0;
@@ -38,12 +39,24 @@ bool connectWiFi(int retries) {
   return true;
 }
 
-bool disconnectWiFi() {
+void disconnectWiFi() {
   WiFi.disconnect();  
 }
 
 bool upload(String host, int port, String path, photo_fb_t * photo) {
-  if (!client.connect(host.c_str(), port)) {
+  int tries = 0;
+  bool connected = false;
+  while (tries < 3) {
+    if (client.connect(host.c_str(), port)) {
+      connected = true;
+      break;
+    }
+    client.stop();
+    tries += 1;
+    delay(5000);
+  }
+
+  if (!connected) {
     return false;
   }
 
@@ -52,9 +65,10 @@ bool upload(String host, int port, String path, photo_fb_t * photo) {
 
   uint32_t extraLen = head.length() + tail.length();
   uint32_t totalLen = photo->len + extraLen;
-   
+
   client.println("POST /" + path + " HTTP/1.1");
   client.println("Host: " + host + ":" + String(port));
+  client.println("auth: " + String(uploadKey));
   client.println("Content-Length: " + String(totalLen));
   client.println("Content-Type: multipart/form-data; boundary=\"boundary\"");
   client.println();
@@ -73,6 +87,11 @@ bool upload(String host, int port, String path, photo_fb_t * photo) {
     }
   }
   client.print(tail);
+
+  while (client.available()) {
+    char c = client.read();
+  }
+
   client.stop();
 
   delay(2000);

@@ -1,5 +1,6 @@
-# README
+# Crashy (aka Procrastibot 2.0)
 
+https://thisismyrobot.github.io/crashy/
 
 ## Hardware
 
