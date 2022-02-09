@@ -1,0 +1,13 @@
+.nav,
+.col {
+    padding: 2rem;
+}
+
+.nav a.brand {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.nav {
+    border-bottom: 1px solid silver;
+}
