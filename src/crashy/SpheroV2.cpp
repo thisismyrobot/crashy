@@ -25,6 +25,11 @@ void sphero_roll(){
   SerialBT.write(request, sizeof request);
 }
 
+void sphero_deep_sleep() {
+  uint8_t request[] = {0xFF, 0xFE, 0x00, 0x22, 0x01, 0x06, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xD8};
+  SerialBT.write(request, sizeof request);
+}
+
 bool explore() {
   int i;
   bool connected;
@@ -44,6 +49,8 @@ bool explore() {
     delay(1000);
   }
 
+  sphero_deep_sleep();
+  delay(500);
   sphero_disconnect();
   return true;
 }
