@@ -19,8 +19,9 @@ async function handleRequest (event) {
     return handleLatest(event.request)
   }
 
-  if (event.request.method === 'GET' && parsedUrl.pathname === '/crashy/') {
-    return fetch(`https://thisismyrobot.github.io/crashy/`)
+  if (event.request.method === 'GET' && parsedUrl.pathname.startsWith('/crashy/')) {
+    let relativePath = parsedUrl.pathname.slice('/crashy/'.length)
+    return fetch(`https://thisismyrobot.github.io/crashy/${relativePath}`)
   }
 
   return new Response('Hello world')

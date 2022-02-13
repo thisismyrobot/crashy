@@ -1,6 +1,10 @@
 # Crashy (aka Procrastibot 2.0)
 
-https://thisismyrobot.github.io/crashy/
+A remake of a very simple robot from my past.
+
+![](hardware/build.jpg)
+
+https://robertwallhead.com/crashy/
 
 ## Hardware
 
@@ -15,3 +19,10 @@ https://randomnerdtutorials.com/esp32-cam-http-post-php-arduino/
 http://www.theoldrobots.com/images48/Elmer_Elsie3.JPG
 https://github.com/espressif/arduino-esp32/issues/2718#issuecomment-552213656
 https://github.com/espressif/arduino-esp32/issues/3916#issuecomment-625486992
+
+## Procrastibot 1.0
+
+![](hardware/original/PA240333.JPG)
+
+See [original](hardware/original/) folder and [Lets Make Robots
+post](https://www.robotshop.com/community/forum/t/procrasti-bot/669).
