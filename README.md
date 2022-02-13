@@ -13,6 +13,11 @@ https://robertwallhead.com/crashy/
  * Sphero 2.0 (and "Chariot" accessory)
  * DFRobot ESP32-CAM Development Board (https://www.dfrobot.com/product-1879.html)
 
+## TODO
+
+ * Crash detection. Should only take photo if crashes. Needs configuration of
+   async packets from Sphero to use.
+
 ## Credits
 
 https://create.arduino.cc/projecthub/noah_arduino/using-esp32-cam-with-arduino-b4f12c
