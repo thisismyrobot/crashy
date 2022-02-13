@@ -1,3 +1,5 @@
+/* globals fetch, addEventListener, Headers, Response, NAMESPACE */
+// Map to https://robertwallhead.com/crashy/*
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event))
 })
@@ -10,11 +12,15 @@ async function handleRequest (event) {
     if (authKey === event.request.headers.get('auth')) {
       return handleUpload(event.request)
     }
-    return new Response("No")
+    return new Response('No')
   }
 
   if (event.request.method === 'GET' && parsedUrl.pathname === '/crashy/latest.jpg') {
     return handleLatest(event.request)
+  }
+
+  if (event.request.method === 'GET' && parsedUrl.pathname === '/crashy/') {
+    return fetch(`https://thisismyrobot.github.io/crashy/`)
   }
 
   return new Response('Hello world')
