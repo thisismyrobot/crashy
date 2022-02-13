@@ -33,6 +33,13 @@ class Sphero2CommandBuilder():
                 self.bytes = bytes(cmd)
                 self.parse = parser if parser is not None else lambda x: None
 
+            @property
+            def arduino_bytes(self):
+                line = 'uint8_t command[] = {'
+                line += ', '.join([f'0x{b:02X}' for b in self.bytes])
+                line += '};'
+                return line
+
         return Command()
 
     def ping(self):
