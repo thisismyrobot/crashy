@@ -75,6 +75,18 @@ class Sphero2CommandBuilder():
 
         return self._build(0x00, 0x20, expect_answer=True, parser=parser)
 
+    def enable_collision_detection(self):
+        return self._build(
+            0x02,
+            0x12,
+            0x01,  # Method = 1 = enabled
+            0x64,  # X threshold of 100 at zero speed.
+            0x64,  # X threshold of 100 at full speed.
+            0x64,  # Y threshold of 100 at zero speed.
+            0x64,  # Y threshold of 100 at full speed.
+            0x64   # 1000ms dead time between retriggers.
+        )
+
 
 def main(port='COM1'):
     commands = Sphero2CommandBuilder()

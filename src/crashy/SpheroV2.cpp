@@ -30,6 +30,11 @@ void sphero_deep_sleep() {
   SerialBT.write(request, sizeof request);
 }
 
+void enable_crash_detection() {
+  uint8_t request[] = {0xFF, 0xFE, 0x02, 0x12, 0x03, 0x07, 0x01, 0x64, 0x64, 0x64, 0x64, 0x64, 0xEC};
+  SerialBT.write(request, sizeof request);
+}
+
 bool explore() {
   int i;
   bool connected;
@@ -44,6 +49,7 @@ bool explore() {
     return false;
   }
 
+  enable_crash_detection();
   for(i = 0; i < EXPLORE_TIME; i++) {
     sphero_roll();
     delay(1000);
