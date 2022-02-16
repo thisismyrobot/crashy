@@ -35,6 +35,16 @@ void enable_crash_detection() {
   SerialBT.write(request, sizeof request);
 }
 
+bool crashed() {
+  if (SerialBT.available() >= 3) {
+    // First three bytes of async crash notification.
+    if (SerialBT.read() == 0xFF && SerialBT.read() == 0xFE && SerialBT.read() == 0x07) {
+      return true;      
+    }
+  }
+  return false;
+}
+
 bool explore() {
   int i;
   bool connected;

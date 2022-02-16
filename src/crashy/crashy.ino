@@ -34,31 +34,29 @@ void setup() {
       ESP.restart();
     }
     
-    // if (crashed()) {
-  
-    photo_fb_t * last_photo = takePhoto();
-    if (last_photo == NULL) {
-      Serial.println("Failed to take photo!");
-      delay(10000);
-      ESP.restart();
-    }
+    if (crashed()) {
+      photo_fb_t * last_photo = takePhoto();
+      if (last_photo == NULL) {
+        Serial.println("Failed to take photo!");
+        delay(10000);
+        ESP.restart();
+      }
+      
+      int saveError = 0;
+      if(!savePhoto(last_photo, &saveError)) {
+        Serial.printf("Failed to save photo: %d\n", saveError);
+        delay(10000);
+        ESP.restart();
+      }
     
-    int saveError = 0;
-    if(!savePhoto(last_photo, &saveError)) {
-      Serial.printf("Failed to save photo: %d\n", saveError);
-      delay(10000);
-      ESP.restart();
+      for (int i = 0; i < 3; i++) {
+        digitalWrite(33, HIGH);
+        delay(500);
+        digitalWrite(33, LOW);
+        delay(500);
+      }
+      esp_deep_sleep_start();  
     }
-  
-    for (int i = 0; i < 3; i++) {
-      digitalWrite(33, HIGH);
-      delay(500);
-      digitalWrite(33, LOW);
-      delay(500);
-    }
-    esp_deep_sleep_start();
-    
-    // }
   }
 }
 
