@@ -8,7 +8,7 @@ async function handleRequest (event) {
   const parsedUrl = new URL(event.request.url)
 
   if (event.request.method === 'POST' && parsedUrl.pathname === '/crashy/upload') {
-    let authKey = await NAMESPACE.get('upload_key')
+    const authKey = await NAMESPACE.get('upload_key')
     if (authKey === event.request.headers.get('auth')) {
       return handleUpload(event.request)
     }
@@ -20,7 +20,7 @@ async function handleRequest (event) {
   }
 
   if (event.request.method === 'GET' && parsedUrl.pathname.startsWith('/crashy/')) {
-    let relativePath = parsedUrl.pathname.slice('/crashy/'.length)
+    const relativePath = parsedUrl.pathname.slice('/crashy/'.length)
     return fetch(`https://thisismyrobot.github.io/crashy/${relativePath}`)
   }
 
@@ -28,9 +28,9 @@ async function handleRequest (event) {
 }
 
 async function handleUpload (request) {
-  let imageData = await request.arrayBuffer()
-  let start = await findFileStartOffset(imageData)
-  let endOffset = await findFileEndOffset(imageData)
+  const imageData = await request.arrayBuffer()
+  const start = await findFileStartOffset(imageData)
+  const endOffset = await findFileEndOffset(imageData)
 
   await NAMESPACE.put('latest', imageData.slice(start, -endOffset))
   return new Response('Success!')
@@ -44,11 +44,11 @@ async function handleLatest (request) {
 }
 
 async function findFileStartOffset (imageData) {
-  let decoder = new TextDecoder('utf-8')
+  const decoder = new TextDecoder('utf-8')
   let start = 0
   let newlines = 0
   while (true) {
-    let nextValue = decoder.decode(imageData.slice(start, start + 2))
+    const nextValue = decoder.decode(imageData.slice(start, start + 2))
     if (nextValue === '\r\n') {
       newlines += 1
     }
@@ -60,10 +60,10 @@ async function findFileStartOffset (imageData) {
 }
 
 async function findFileEndOffset (imageData) {
-  let decoder = new TextDecoder('utf-8')
+  const decoder = new TextDecoder('utf-8')
   let start = 0
   while (true) {
-    let nextValue = decoder.decode(imageData.slice(start, start + 2))
+    const nextValue = decoder.decode(imageData.slice(start, start + 2))
     if (nextValue === '\r\n') {
       break
     }
