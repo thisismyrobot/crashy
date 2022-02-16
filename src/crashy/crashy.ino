@@ -26,15 +26,18 @@ void setup() {
     ESP.restart();
   }
 
+  if(!connect()) {
+    Serial.println("Failed to explore!");    
+    delay(10000);
+    ESP.restart();
+  }
+
   while(1) {
-  
-    if(!explore()) {
-      Serial.println("Failed to explore!");    
-      delay(10000);
-      ESP.restart();
-    }
-    
+
+    explore();      
     if (crashed()) {
+      disconnect();
+
       photo_fb_t * last_photo = takePhoto();
       if (last_photo == NULL) {
         Serial.println("Failed to take photo!");
@@ -56,6 +59,9 @@ void setup() {
         delay(500);
       }
       esp_deep_sleep_start();  
+    }
+    else {
+      delay(5000);
     }
   }
 }

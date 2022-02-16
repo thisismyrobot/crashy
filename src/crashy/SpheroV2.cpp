@@ -45,10 +45,9 @@ bool crashed() {
   return false;
 }
 
-bool explore() {
-  int i;
+bool connect() {
   bool connected;
-  for(i = 0; i < CONNECT_RETRIES; i++) {
+  for(int i = 0; i < CONNECT_RETRIES; i++) {
     if(sphero_connect(SPHERO_NAME)) {
       connected = true;
       break;
@@ -60,13 +59,18 @@ bool explore() {
   }
 
   enable_crash_detection();
-  for(i = 0; i < EXPLORE_TIME; i++) {
+  return true;
+}
+
+void explore() {
+  for(int i = 0; i < EXPLORE_TIME; i++) {
     sphero_roll();
     delay(1000);
   }
+}
 
+void disconnect() {
   sphero_deep_sleep();
   delay(500);
   sphero_disconnect();
-  return true;
 }
