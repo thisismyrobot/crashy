@@ -8,6 +8,14 @@ surfaces, sharing pictures of everything it hits.
 
 ![](hardware/build.jpg)
 
+## Operation
+
+ * Place Sphero on charger to wake from deep sleep
+ * Install Sphero in Chariot
+ * Turn on ESP32-CAM
+ * ?
+ * Profit
+
 ## Hardware
 
  * Sphero 2.0 (and "Chariot" accessory)
