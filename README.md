@@ -6,7 +6,7 @@ An overly-complicated nostalgic remake of a very simple robot from my past,
 bringing together a Sphero 2.0 and and ESP32-CAM to fumble around smooth
 surfaces, sharing pictures of everything it hits.
 
-![](hardware/build.jpg)
+![](hardware/build1.jpg)
 
 ## Operation
 
@@ -20,6 +20,11 @@ surfaces, sharing pictures of everything it hits.
 
  * Sphero 2.0 (and "Chariot" accessory)
  * DFRobot ESP32-CAM Development Board (https://www.dfrobot.com/product-1879.html)
+ * USB power bank
+ * Some [MohitBhoite](https://twitter.com/MohitBhoite)-inspired (but
+   ultimately sinfully-ugly) soldering
+
+![](hardware/build2.jpg)
 
 ## Credits/Inspiration/Help/Thanks
 
