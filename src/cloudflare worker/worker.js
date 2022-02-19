@@ -33,6 +33,8 @@ async function handleUpload (request) {
   const endOffset = await findFileEndOffset(imageData)
 
   await NAMESPACE.put('latest', imageData.slice(start, -endOffset))
+  await NAMESPACE.put(`history_${new Date().toISOString()}.jpg`, imageData.slice(start, -endOffset))
+
   return new Response('Success!')
 }
 
