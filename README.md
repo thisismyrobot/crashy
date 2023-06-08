@@ -1,7 +1,5 @@
 # Crashy (aka Procrastibot 2.0)
 
-https://robertwallhead.com/crashy/
-
 An overly-complicated nostalgic remake of a very simple robot from my past,
 bringing together a Sphero 2.0 and and ESP32-CAM to fumble around smooth
 surfaces, sharing pictures of everything it hits.
